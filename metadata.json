@@ -1,0 +1,7 @@
+{
+  "name": "Official KPT CS Website",
+  "description": "The enhanced official web portal for the Computer Science Department, featuring faculty listings, academic resources, department milestones, and an AI-powered assistant.",
+  "requestFramePermissions": [
+    "microphone"
+  ]
+}
