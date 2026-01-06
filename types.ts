@@ -6,8 +6,10 @@ export interface Faculty {
   bio: string;
   photo: string;
   department: string;
-  email: string;
-  researchInterests: string[];
+  email?: string;
+  researchInterests?: string[];
+  subjects?: string[];
+  category: 'hod' | 'permanent' | 'guest';
 }
 
 export interface Milestone {
