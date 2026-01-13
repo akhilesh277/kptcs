@@ -1,22 +1,16 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
+import './index.css';
 import App from './App';
 
-const mountApp = () => {
-  const rootElement = document.getElementById('root');
-  if (!rootElement) return;
-
-  const root = createRoot(rootElement);
-  root.render(
-    <React.StrictMode>
-      <App />
-    </React.StrictMode>
-  );
-};
-
-// Ensure DOM is ready, especially in Chrome's fast-loading environments
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', mountApp);
-} else {
-  mountApp();
+const rootElement = document.getElementById('root');
+if (!rootElement) {
+  throw new Error("Could not find root element to mount to");
 }
+
+const root = createRoot(rootElement);
+root.render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>
+);
