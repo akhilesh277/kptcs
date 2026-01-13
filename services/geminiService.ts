@@ -1,10 +1,14 @@
-
 import { GoogleGenAI } from "@google/genai";
 
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY || '' });
+// Use a lazy getter for the AI instance to avoid crashes if process is undefined during script load
+const getAIClient = () => {
+  const apiKey = typeof process !== 'undefined' ? process.env.API_KEY : '';
+  return new GoogleGenAI({ apiKey: apiKey || '' });
+};
 
 export const getDepartmentResponse = async (userPrompt: string) => {
   try {
+    const ai = getAIClient();
     const response = await ai.models.generateContent({
       model: "gemini-3-flash-preview",
       contents: userPrompt,
@@ -20,7 +24,7 @@ export const getDepartmentResponse = async (userPrompt: string) => {
         temperature: 0.7,
       },
     });
-    return response.text;
+    return response.text || "I processed your request but didn't generate any text. Could you try rephrasing?";
   } catch (error) {
     console.error("Gemini Error:", error);
     return "I'm having a bit of trouble connecting to my department servers. Please try again or visit the Contact page!";
