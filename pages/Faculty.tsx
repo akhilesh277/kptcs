@@ -4,59 +4,54 @@ import { FACULTY_DATA } from '../constants';
 import { Faculty as FacultyType } from '../types';
 
 /**
- * FacultyCard component for displaying individual faculty information.
- * Uses robust image error handling and consistent layout.
+ * FacultyCard Component
+ * Displays faculty information with an elegant design and robust image fallbacks.
  */
 const FacultyCard: React.FC<{ faculty: FacultyType }> = ({ faculty }) => {
   const [imgError, setImgError] = useState(false);
 
-  // Generates a consistent fallback avatar using initials if the provided image fails to load.
-  const avatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(faculty.name)}&background=${
+  const fallbackAvatar = `https://ui-avatars.com/api/?name=${encodeURIComponent(faculty.name)}&background=${
     faculty.category === 'guest' ? 'cbd5e1' : '6366f1'
   }&color=${faculty.category === 'guest' ? '475569' : 'fff'}&size=512`;
 
   return (
-    <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden hover:shadow-xl transition-all duration-300 group flex flex-col h-full shadow-sm">
-      <div className="aspect-[4/5] relative overflow-hidden bg-slate-100">
+    <div className="bg-white rounded-3xl border border-slate-200 overflow-hidden hover:shadow-2xl transition-all duration-500 group flex flex-col h-full shadow-sm hover:-translate-y-1">
+      <div className="aspect-[4/5] relative overflow-hidden bg-slate-50">
         <img 
-          src={imgError ? avatarUrl : (faculty.photo || avatarUrl)} 
+          src={imgError ? fallbackAvatar : (faculty.photo || fallbackAvatar)} 
           alt={faculty.name} 
           onError={() => setImgError(true)}
-          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
           loading="lazy"
         />
-        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent p-5">
-          <h3 className="text-xl font-bold text-white leading-tight">{faculty.name}</h3>
-          <p className="text-indigo-300 text-sm font-medium mt-1">{faculty.role}</p>
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-900/90 via-slate-900/20 to-transparent p-6 flex flex-col justify-end">
+          <h3 className="text-xl font-bold text-white leading-tight drop-shadow-md">{faculty.name}</h3>
+          <p className="text-indigo-300 text-sm font-semibold tracking-wide mt-1 uppercase">{faculty.role}</p>
         </div>
       </div>
-      <div className="p-6 flex-grow flex flex-col">
-        <p className="text-sm text-slate-600 mb-6 leading-relaxed">
-          {faculty.bio}
+      
+      <div className="p-6 flex-grow flex flex-col bg-white">
+        <p className="text-sm text-slate-500 mb-6 leading-relaxed italic">
+          "{faculty.bio}"
         </p>
         
-        {/* Render Interests if available (for HOD and Permanent) */}
-        {faculty.researchInterests && faculty.researchInterests.length > 0 && (
-          <div className="mt-auto pt-4 border-t border-slate-100">
-            <h5 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Areas of Interest</h5>
-            <div className="flex flex-wrap gap-1.5">
-              {faculty.researchInterests.map((interest, i) => (
-                <span key={i} className="text-[11px] bg-indigo-50 text-indigo-700 px-2 py-0.5 rounded font-semibold border border-indigo-100/50">
-                  {interest}
-                </span>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Render Subjects if available (primarily for Guest lecturers) */}
-        {faculty.subjects && faculty.subjects.length > 0 && (
-          <div className="mt-auto pt-4 border-t border-slate-100">
-            <h5 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Key Subjects</h5>
-            <div className="flex flex-wrap gap-1.5">
-              {faculty.subjects.map((subject, i) => (
-                <span key={i} className="text-[11px] bg-slate-100 text-slate-700 px-2 py-0.5 rounded font-medium border border-slate-200/50">
-                  {subject}
+        {/* Expertise / Interests */}
+        {(faculty.researchInterests || faculty.subjects) && (
+          <div className="mt-auto pt-5 border-t border-slate-100">
+            <h5 className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] mb-3">
+              {faculty.category === 'guest' ? 'Curriculum Focus' : 'Expertise'}
+            </h5>
+            <div className="flex flex-wrap gap-2">
+              {(faculty.researchInterests || faculty.subjects || []).map((item, i) => (
+                <span 
+                  key={i} 
+                  className={`text-[11px] px-3 py-1 rounded-full font-bold border ${
+                    faculty.category === 'guest' 
+                      ? 'bg-slate-50 text-slate-600 border-slate-200' 
+                      : 'bg-indigo-50 text-indigo-700 border-indigo-100'
+                  }`}
+                >
+                  {item}
                 </span>
               ))}
             </div>
@@ -68,34 +63,42 @@ const FacultyCard: React.FC<{ faculty: FacultyType }> = ({ faculty }) => {
 };
 
 /**
- * Main Faculty page component.
- * Categorizes faculty into HOD, Permanent, and Guest sections as requested.
+ * SectionHeader Component
+ * Consistent labeling for faculty categories.
  */
+const SectionHeader: React.FC<{ title: string }> = ({ title }) => (
+  <div className="flex items-center gap-6 mb-16">
+    <div className="h-px flex-grow bg-gradient-to-r from-transparent via-slate-200 to-slate-200"></div>
+    <h2 className="text-sm font-black text-slate-400 uppercase tracking-[0.4em] whitespace-nowrap">{title}</h2>
+    <div className="h-px flex-grow bg-gradient-to-l from-transparent via-slate-200 to-slate-200"></div>
+  </div>
+);
+
 const Faculty: React.FC = () => {
   const hod = FACULTY_DATA.filter(f => f.category === 'hod');
   const permanent = FACULTY_DATA.filter(f => f.category === 'permanent');
   const guest = FACULTY_DATA.filter(f => f.category === 'guest');
 
   return (
-    <div className="animate-fadeIn py-16 sm:py-24 bg-slate-50/50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="mb-16 sm:mb-24 text-center max-w-3xl mx-auto">
-          <h1 className="text-4xl sm:text-5xl font-bold text-slate-900 mb-6 tracking-tight">Our Faculty</h1>
-          <p className="text-lg text-slate-600 leading-relaxed">
-            Meet the dedicated team of educators and researchers committed to academic excellence and technical leadership in the Computer Science department.
+    <div className="animate-fadeIn py-20 lg:py-32 bg-slate-50/30">
+      <div className="max-w-7xl mx-auto px-6 lg:px-8">
+        <div className="mb-24 text-center max-w-4xl mx-auto">
+          <span className="text-indigo-600 font-bold tracking-widest uppercase text-xs">Excellence in Education</span>
+          <h1 className="text-5xl sm:text-6xl font-extrabold text-slate-900 mt-4 mb-8 tracking-tight">
+            Our Distinguished <span className="text-indigo-600">Faculty</span>
+          </h1>
+          <p className="text-xl text-slate-600 leading-relaxed font-light">
+            Dedicated mentors and industry pioneers shaping the next generation of software engineers, 
+            cybersecurity experts, and technical innovators.
           </p>
         </div>
 
-        {/* Head of Department Section */}
+        {/* HOD Section */}
         {hod.length > 0 && (
-          <section className="mb-24">
-            <div className="flex items-center gap-4 mb-12">
-              <div className="h-px flex-grow bg-slate-200"></div>
-              <h2 className="text-sm font-bold text-slate-500 uppercase tracking-[0.3em]">Head of Department</h2>
-              <div className="h-px flex-grow bg-slate-200"></div>
-            </div>
+          <section className="mb-32">
+            <SectionHeader title="Leadership" />
             <div className="flex justify-center">
-              <div className="w-full max-w-md">
+              <div className="w-full max-w-md transform transition-all hover:scale-[1.02]">
                 <FacultyCard faculty={hod[0]} />
               </div>
             </div>
@@ -104,13 +107,9 @@ const Faculty: React.FC = () => {
 
         {/* Permanent Faculty Section */}
         {permanent.length > 0 && (
-          <section className="mb-24">
-            <div className="flex items-center gap-4 mb-12">
-              <div className="h-px flex-grow bg-slate-200"></div>
-              <h2 className="text-sm font-bold text-slate-500 uppercase tracking-[0.3em]">Permanent Faculty</h2>
-              <div className="h-px flex-grow bg-slate-200"></div>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-10 max-w-5xl mx-auto">
+          <section className="mb-32">
+            <SectionHeader title="Core Academic Team" />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-12 max-w-5xl mx-auto">
               {permanent.map(faculty => (
                 <FacultyCard key={faculty.id} faculty={faculty} />
               ))}
@@ -121,11 +120,7 @@ const Faculty: React.FC = () => {
         {/* Guest Faculty Section */}
         {guest.length > 0 && (
           <section>
-            <div className="flex items-center gap-4 mb-12">
-              <div className="h-px flex-grow bg-slate-200"></div>
-              <h2 className="text-sm font-bold text-slate-500 uppercase tracking-[0.3em]">Guest Faculty</h2>
-              <div className="h-px flex-grow bg-slate-200"></div>
-            </div>
+            <SectionHeader title="Guest Lecturers" />
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
               {guest.map(faculty => (
                 <FacultyCard key={faculty.id} faculty={faculty} />
