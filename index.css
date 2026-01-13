@@ -1,0 +1,51 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply font-sans text-[15px] antialiased;
+    /* Ensure body doesn't bounce/lock */
+    overscroll-behavior-y: none;
+  }
+}
+
+@layer components {
+  .glass {
+    @apply bg-white/70 backdrop-blur-md;
+  }
+  
+  .dark .glass {
+    @apply bg-slate-900/70 backdrop-blur-md;
+  }
+
+  /* Bug 2 Fix: Solid menu without any transparency or blur */
+  .menu-solid {
+    background-color: #ffffff !important;
+    opacity: 1 !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+  
+  .dark .menu-solid {
+    background-color: #0f0f0f !important;
+    opacity: 1 !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+}
+
+@layer utilities {
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  /* Bug 1 Fix Helper: Prevent scroll chaining issues */
+  .scroll-stable {
+    overscroll-behavior-y: contain;
+    -webkit-overflow-scrolling: touch;
+  }
+}
