@@ -42,15 +42,19 @@ const Layout: React.FC<LayoutProps> = ({ children, activeTab, setActiveTab }) =>
 
   return (
     <div className="min-h-screen flex flex-col transition-colors duration-300 bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100">
-      {/* Navigation */}
-      <nav className="sticky top-0 z-50 glass border-b border-slate-200 dark:border-slate-800">
+      {/* Navigation - Medium Cyan Gradient Background */}
+      <nav className="sticky top-0 z-50 border-b border-cyan-600/20 bg-gradient-to-r from-cyan-700 via-cyan-600 to-teal-600 shadow-md">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16 items-center">
             <div className="flex items-center gap-3 cursor-pointer" onClick={() => setActiveTab('home')}>
-              <img src={logoUrl} alt="KPT Logo" className="h-10 w-auto object-contain" />
+              <img 
+                src={logoUrl} 
+                alt="KPT Logo" 
+                className="h-12 w-auto object-contain bg-white rounded-md p-0.5 shadow-md border border-white/20" 
+              />
               <div className="flex flex-col leading-tight hidden md:block">
-                <span className="font-bold text-lg tracking-tight text-slate-900 dark:text-white">KPT Mangalore</span>
-                <span className="text-[10px] text-indigo-600 dark:text-indigo-400 font-bold uppercase tracking-widest">  Computer Science</span>
+                <span className="font-bold text-lg tracking-tight text-white">KPT Mangalore</span>
+                <span className="text-[10px] text-cyan-200 font-bold uppercase tracking-widest">  Computer Science</span>
               </div>
             </div>
             
@@ -60,10 +64,10 @@ const Layout: React.FC<LayoutProps> = ({ children, activeTab, setActiveTab }) =>
                   <button
                     key={item.id}
                     onClick={() => setActiveTab(item.id)}
-                    className={`px-3 py-2 rounded-md text-sm font-bold transition-colors ${
+                    className={`px-3 py-2 rounded-md text-sm font-bold transition-all ${
                       activeTab === item.id
-                        ? 'bg-indigo-50 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-300'
-                        : 'text-slate-700 dark:text-slate-300 hover:text-indigo-600 dark:hover:text-indigo-300 hover:bg-slate-100 dark:hover:bg-slate-800'
+                        ? 'bg-white/20 text-white shadow-sm'
+                        : 'text-cyan-50 hover:text-white hover:bg-white/10'
                     }`}
                   >
                     {item.name}
@@ -78,7 +82,7 @@ const Layout: React.FC<LayoutProps> = ({ children, activeTab, setActiveTab }) =>
                     key={item.id}
                     onClick={() => setActiveTab(item.id)}
                     className={`p-2 rounded-md transition-colors ${
-                      activeTab === item.id ? 'text-indigo-600' : 'text-slate-500'
+                      activeTab === item.id ? 'text-white bg-white/20' : 'text-cyan-100 hover:text-white'
                     }`}
                   >
                     <i className={`fas ${
@@ -91,31 +95,30 @@ const Layout: React.FC<LayoutProps> = ({ children, activeTab, setActiveTab }) =>
                 ))}
               </div>
 
-              <div className="flex items-center border-l border-slate-200 dark:border-slate-700 ml-2 pl-2 gap-1">
+              <div className="flex items-center border-l border-white/20 ml-2 pl-2 gap-1">
                 {/* Book Cursor Toggle */}
                 <button 
                   onClick={toggleCursor}
                   className={`p-2 rounded-full transition-all flex items-center justify-center gap-1 text-[11px] font-bold uppercase tracking-tighter ${
                     isBookCursor 
-                    ? 'bg-indigo-600 text-white shadow-inner' 
-                    : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
+                    ? 'bg-white text-cyan-700 shadow-inner' 
+                    : 'text-cyan-50 hover:bg-white/10 hover:text-white'
                   }`}
                   aria-label="Toggle Book Cursor"
                   title="Toggle Book Cursor"
                 >
                   <i className="fas fa-book-open"></i>
-                  <span className="hidden lg:inline"></span>
                 </button>
 
                 {/* Theme Toggle */}
                 <button 
                   onClick={toggleTheme}
-                  className="p-2 rounded-full text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all flex items-center justify-center"
+                  className="p-2 rounded-full text-cyan-50 hover:bg-white/10 hover:text-white transition-all flex items-center justify-center"
                   aria-label="Toggle Theme"
                   title="Toggle Theme"
                 >
                   {isDarkMode ? (
-                    <i className="fas fa-sun text-lg text-yellow-400"></i>
+                    <i className="fas fa-sun text-lg text-yellow-300"></i>
                   ) : (
                     <i className="fas fa-moon text-lg"></i>
                   )}

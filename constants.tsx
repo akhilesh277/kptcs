@@ -66,7 +66,7 @@ export const FACULTY_DATA: Faculty[] = [
     name: 'Mrs. Sheetal J Shet',
     role: 'Guest Lecturer',
     bio: 'Lecturer specializing in Computer Networking and data communications.',
-    photo: 'https://ik.imagekit.io/akhileshu/likitha.png',
+    photo: 'https://ik.imagekit.io/akhileshu/sheethal.png',
     department: 'Computer Science',
     subjects: ['Computer Networking'],
     category: 'guest'

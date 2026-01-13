@@ -103,14 +103,14 @@ const Chatbot: React.FC = () => {
       {isOpen ? (
         <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl w-[320px] sm:w-[380px] flex flex-col border border-slate-200 dark:border-slate-800 overflow-hidden h-[500px] animate-fadeIn transition-colors duration-300">
           {/* Header */}
-          <div className="bg-indigo-600 dark:bg-indigo-700 p-4 flex justify-between items-center text-white">
+          <div className="bg-gradient-to-r from-cyan-600 to-teal-600 p-4 flex justify-between items-center text-white">
             <div className="flex items-center gap-2">
               <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
                 <i className="fas fa-university text-sm"></i>
               </div>
               <span className="font-semibold text-sm">KPT CS Assistant</span>
             </div>
-            <button onClick={() => setIsOpen(false)} className="hover:text-indigo-200 transition-colors">
+            <button onClick={() => setIsOpen(false)} className="hover:text-cyan-100 transition-colors">
               <i className="fas fa-times"></i>
             </button>
           </div>
@@ -121,7 +121,7 @@ const Chatbot: React.FC = () => {
               <div key={idx} className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}>
                 <div className={`max-w-[85%] px-4 py-2.5 rounded-2xl text-[13px] leading-relaxed ${
                   m.role === 'user' 
-                    ? 'bg-indigo-600 text-white rounded-tr-none shadow-sm' 
+                    ? 'bg-gradient-to-r from-cyan-600 to-teal-500 text-white rounded-tr-none shadow-sm' 
                     : 'bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100 rounded-tl-none shadow-sm'
                 }`}>
                   {m.text}
@@ -132,9 +132,9 @@ const Chatbot: React.FC = () => {
               <div className="flex justify-start">
                 <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-4 py-2 rounded-2xl rounded-tl-none shadow-sm">
                   <div className="flex gap-1">
-                    <div className="w-1 h-1 bg-slate-300 dark:bg-slate-500 rounded-full animate-bounce"></div>
-                    <div className="w-1 h-1 bg-slate-300 dark:bg-slate-500 rounded-full animate-bounce delay-75"></div>
-                    <div className="w-1 h-1 bg-slate-300 dark:bg-slate-500 rounded-full animate-bounce delay-150"></div>
+                    <div className="w-1 h-1 bg-cyan-300 dark:bg-cyan-500 rounded-full animate-bounce"></div>
+                    <div className="w-1 h-1 bg-cyan-300 dark:bg-cyan-500 rounded-full animate-bounce delay-75"></div>
+                    <div className="w-1 h-1 bg-cyan-300 dark:bg-cyan-500 rounded-full animate-bounce delay-150"></div>
                   </div>
                 </div>
               </div>
@@ -148,7 +148,7 @@ const Chatbot: React.FC = () => {
                 <button
                   key={s}
                   onClick={() => handleSuggestionClick(s)}
-                  className="text-[10px] font-semibold bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 px-2.5 py-1 rounded-full border border-indigo-100 dark:border-indigo-800 hover:bg-indigo-100 dark:hover:bg-indigo-900/50 transition-colors"
+                  className="text-[10px] font-semibold bg-cyan-50 dark:bg-cyan-900/30 text-cyan-700 dark:text-cyan-300 px-2.5 py-1 rounded-full border border-cyan-100 dark:border-cyan-800 hover:bg-cyan-100 dark:hover:bg-cyan-900/50 transition-colors"
                 >
                   {s}
                 </button>
@@ -161,11 +161,11 @@ const Chatbot: React.FC = () => {
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && handleSend()}
                 placeholder="Ask a question..."
-                className="flex-grow border border-slate-200 dark:border-slate-700 rounded-full px-4 py-2 text-xs focus:outline-none focus:ring-1 focus:ring-indigo-500 bg-slate-50 dark:bg-slate-800 dark:text-white"
+                className="flex-grow border border-slate-200 dark:border-slate-700 rounded-full px-4 py-2 text-xs focus:outline-none focus:ring-1 focus:ring-cyan-500 bg-slate-50 dark:bg-slate-800 dark:text-white"
               />
               <button 
                 onClick={handleSend}
-                className="w-9 h-9 bg-indigo-600 dark:bg-indigo-700 text-white rounded-full flex items-center justify-center hover:bg-indigo-700 dark:hover:bg-indigo-800 transition-colors shrink-0 shadow-md"
+                className="w-9 h-9 bg-gradient-to-r from-cyan-600 to-teal-500 text-white rounded-full flex items-center justify-center hover:from-cyan-700 hover:to-teal-600 transition-colors shrink-0 shadow-md"
               >
                 <i className="fas fa-paper-plane text-xs"></i>
               </button>
@@ -175,7 +175,7 @@ const Chatbot: React.FC = () => {
       ) : (
         <button 
           onClick={() => setIsOpen(true)}
-          className="bg-indigo-600 hover:bg-indigo-700 text-white w-14 h-14 rounded-full shadow-xl flex items-center justify-center transition-all hover:scale-105 active:scale-95 group"
+          className="bg-gradient-to-br from-cyan-600 to-teal-500 hover:from-cyan-700 hover:to-teal-600 text-white w-14 h-14 rounded-full shadow-xl flex items-center justify-center transition-all hover:scale-105 active:scale-95 group"
         >
           <i className="fas fa-comment-dots text-xl group-hover:animate-pulse"></i>
         </button>
