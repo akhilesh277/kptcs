@@ -53,7 +53,7 @@ const Layout: React.FC<LayoutProps> = ({ children, activeTab, setActiveTab }) =>
                 className="h-12 w-auto object-contain bg-white rounded-md p-0.5 shadow-md border border-white/20" 
               />
               <div className="flex flex-col leading-tight hidden md:block">
-                <span className="font-bold text-lg tracking-tight text-white">KPT Mangalore</span>
+                <span className="font-bold text-lg tracking-tight text-white">Karnataka (Govt.) Polytechnic</span>
                 <span className="text-[10px] text-cyan-200 font-bold uppercase tracking-widest">  Computer Science</span>
               </div>
             </div>
