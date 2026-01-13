@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -7,6 +7,29 @@ interface LayoutProps {
 }
 
 const Layout: React.FC<LayoutProps> = ({ children, activeTab, setActiveTab }) => {
+  // Website must always open in Light Mode (false) first.
+  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [isBookCursor, setIsBookCursor] = useState(false);
+
+  useEffect(() => {
+    if (isDarkMode) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, [isDarkMode]);
+
+  useEffect(() => {
+    if (isBookCursor) {
+      document.documentElement.classList.add('book-cursor-active');
+    } else {
+      document.documentElement.classList.remove('book-cursor-active');
+    }
+  }, [isBookCursor]);
+
+  const toggleTheme = () => setIsDarkMode(!isDarkMode);
+  const toggleCursor = () => setIsBookCursor(!isBookCursor);
+
   const navItems = [
     { name: 'Home', id: 'home' },
     { name: 'About', id: 'about' },
@@ -18,45 +41,98 @@ const Layout: React.FC<LayoutProps> = ({ children, activeTab, setActiveTab }) =>
   const logoUrl = "https://gpt.karnataka.gov.in/kptmangalore/public/uploads/dept_logo1755926888.jpg";
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col transition-colors duration-300">
       {/* Navigation */}
-      <nav className="sticky top-0 z-50 glass border-b border-slate-200">
+      <nav className="sticky top-0 z-50 glass border-b border-slate-200 dark:border-slate-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between h-16 items-center">
             <div className="flex items-center gap-3 cursor-pointer" onClick={() => setActiveTab('home')}>
               <img src={logoUrl} alt="KPT Logo" className="h-10 w-auto object-contain" />
               <div className="flex flex-col leading-tight hidden md:block">
-                <span className="font-bold text-lg tracking-tight">KPT Mangalore</span>
-                <span className="text-[10px] text-indigo-600 font-bold uppercase tracking-widest">  Computer Science</span>
+                <span className="font-bold text-lg tracking-tight dark:text-white">KPT Mangalore</span>
+                <span className="text-[10px] text-indigo-600 dark:text-indigo-400 font-bold uppercase tracking-widest">  Computer Science</span>
               </div>
             </div>
             
-            <div className="flex space-x-1 md:space-x-4">
-              {navItems.map((item) => (
-                <button
-                  key={item.id}
-                  onClick={() => setActiveTab(item.id)}
-                  className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
-                    activeTab === item.id
-                      ? 'bg-indigo-50 text-indigo-700'
-                      : 'text-slate-600 hover:text-indigo-600 hover:bg-slate-50'
+            <div className="flex items-center space-x-1 md:space-x-2">
+              <div className="hidden sm:flex space-x-1 md:space-x-4">
+                {navItems.map((item) => (
+                  <button
+                    key={item.id}
+                    onClick={() => setActiveTab(item.id)}
+                    className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                      activeTab === item.id
+                        ? 'bg-indigo-50 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-300'
+                        : 'text-slate-600 dark:text-slate-400 hover:text-indigo-600 dark:hover:text-indigo-300 hover:bg-slate-50 dark:hover:bg-slate-800'
+                    }`}
+                  >
+                    {item.name}
+                  </button>
+                ))}
+              </div>
+
+              {/* Mobile items condensed */}
+              <div className="sm:hidden flex space-x-1">
+                {navItems.map((item) => (
+                  <button
+                    key={item.id}
+                    onClick={() => setActiveTab(item.id)}
+                    className={`p-2 rounded-md transition-colors ${
+                      activeTab === item.id ? 'text-indigo-600' : 'text-slate-500'
+                    }`}
+                  >
+                    <i className={`fas ${
+                      item.id === 'home' ? 'fa-home' : 
+                      item.id === 'about' ? 'fa-info-circle' :
+                      item.id === 'faculty' ? 'fa-users' :
+                      item.id === 'resources' ? 'fa-book' : 'fa-envelope'
+                    } text-lg`}></i>
+                  </button>
+                ))}
+              </div>
+
+              <div className="flex items-center border-l border-slate-200 dark:border-slate-700 ml-2 pl-2 gap-1">
+                {/* Book Cursor Toggle */}
+                <button 
+                  onClick={toggleCursor}
+                  className={`p-2 rounded-full transition-all flex items-center justify-center gap-1 text-[11px] font-bold uppercase tracking-tighter ${
+                    isBookCursor 
+                    ? 'bg-indigo-600 text-white' 
+                    : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'
                   }`}
+                  aria-label="Toggle Book Cursor"
+                  title="Toggle Book Cursor"
                 >
-                  {item.name}
+                  <i className="fas fa-book-open"></i>
+                  <span className="hidden lg:inline">Cursor</span>
                 </button>
-              ))}
+
+                {/* Theme Toggle */}
+                <button 
+                  onClick={toggleTheme}
+                  className="p-2 rounded-full text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all flex items-center justify-center"
+                  aria-label="Toggle Theme"
+                  title="Toggle Theme"
+                >
+                  {isDarkMode ? (
+                    <i className="fas fa-sun text-lg text-yellow-400"></i>
+                  ) : (
+                    <i className="fas fa-moon text-lg"></i>
+                  )}
+                </button>
+              </div>
             </div>
           </div>
         </div>
       </nav>
 
       {/* Main Content */}
-      <main className="flex-grow">
+      <main className="flex-grow dark:bg-slate-950">
         {children}
       </main>
 
       {/* Footer */}
-      <footer className="bg-slate-900 text-slate-300 py-12">
+      <footer className="bg-slate-900 dark:bg-black text-slate-300 py-12 border-t border-slate-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-4 gap-8">
           <div className="col-span-1 md:col-span-2">
             <div className="flex items-center gap-3 mb-4">

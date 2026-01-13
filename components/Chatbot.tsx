@@ -94,21 +94,16 @@ const Chatbot: React.FC = () => {
   };
 
   const handleSuggestionClick = (suggestion: string) => {
-    setInput(suggestion);
-    // Auto-send suggestion if preferred, but user requested "automatically appear in input box"
-    // I will let it appear in input box as requested, but also trigger send for better UX if needed.
-    // Following strict instruction: "text must automatically appear in the chatbot input box. The chatbot should then respond"
     setMessages(prev => [...prev, { role: 'user', text: suggestion }]);
-    setInput('');
     processResponse(suggestion);
   };
 
   return (
     <div className="fixed bottom-6 right-6 z-[100]">
       {isOpen ? (
-        <div className="bg-white rounded-2xl shadow-2xl w-[320px] sm:w-[380px] flex flex-col border border-slate-200 overflow-hidden h-[500px] animate-fadeIn">
+        <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl w-[320px] sm:w-[380px] flex flex-col border border-slate-200 dark:border-slate-800 overflow-hidden h-[500px] animate-fadeIn transition-colors duration-300">
           {/* Header */}
-          <div className="bg-indigo-600 p-4 flex justify-between items-center text-white">
+          <div className="bg-indigo-600 dark:bg-indigo-700 p-4 flex justify-between items-center text-white">
             <div className="flex items-center gap-2">
               <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
                 <i className="fas fa-university text-sm"></i>
@@ -121,13 +116,13 @@ const Chatbot: React.FC = () => {
           </div>
 
           {/* Messages */}
-          <div ref={scrollRef} className="flex-grow overflow-y-auto p-4 space-y-4 bg-slate-50 scroll-stable">
+          <div ref={scrollRef} className="flex-grow overflow-y-auto p-4 space-y-4 bg-slate-50 dark:bg-slate-950 scroll-stable">
             {messages.map((m, idx) => (
               <div key={idx} className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}>
                 <div className={`max-w-[85%] px-4 py-2.5 rounded-2xl text-[13px] leading-relaxed ${
                   m.role === 'user' 
                     ? 'bg-indigo-600 text-white rounded-tr-none shadow-sm' 
-                    : 'bg-white border border-slate-200 text-slate-800 rounded-tl-none shadow-sm'
+                    : 'bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-800 dark:text-slate-100 rounded-tl-none shadow-sm'
                 }`}>
                   {m.text}
                 </div>
@@ -135,11 +130,11 @@ const Chatbot: React.FC = () => {
             ))}
             {isTyping && (
               <div className="flex justify-start">
-                <div className="bg-white border border-slate-200 px-4 py-2 rounded-2xl rounded-tl-none shadow-sm">
+                <div className="bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 px-4 py-2 rounded-2xl rounded-tl-none shadow-sm">
                   <div className="flex gap-1">
-                    <div className="w-1 h-1 bg-slate-300 rounded-full animate-bounce"></div>
-                    <div className="w-1 h-1 bg-slate-300 rounded-full animate-bounce delay-75"></div>
-                    <div className="w-1 h-1 bg-slate-300 rounded-full animate-bounce delay-150"></div>
+                    <div className="w-1 h-1 bg-slate-300 dark:bg-slate-500 rounded-full animate-bounce"></div>
+                    <div className="w-1 h-1 bg-slate-300 dark:bg-slate-500 rounded-full animate-bounce delay-75"></div>
+                    <div className="w-1 h-1 bg-slate-300 dark:bg-slate-500 rounded-full animate-bounce delay-150"></div>
                   </div>
                 </div>
               </div>
@@ -147,13 +142,13 @@ const Chatbot: React.FC = () => {
           </div>
 
           {/* Suggestions & Input */}
-          <div className="bg-white border-t border-slate-100 p-3">
+          <div className="bg-white dark:bg-slate-900 border-t border-slate-100 dark:border-slate-800 p-3">
             <div className="flex flex-wrap gap-1.5 mb-3">
               {SUGGESTIONS.map(s => (
                 <button
                   key={s}
                   onClick={() => handleSuggestionClick(s)}
-                  className="text-[10px] font-semibold bg-indigo-50 text-indigo-700 px-2.5 py-1 rounded-full border border-indigo-100 hover:bg-indigo-100 transition-colors"
+                  className="text-[10px] font-semibold bg-indigo-50 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-300 px-2.5 py-1 rounded-full border border-indigo-100 dark:border-indigo-800 hover:bg-indigo-100 dark:hover:bg-indigo-900/50 transition-colors"
                 >
                   {s}
                 </button>
@@ -166,11 +161,11 @@ const Chatbot: React.FC = () => {
                 onChange={(e) => setInput(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && handleSend()}
                 placeholder="Ask a question..."
-                className="flex-grow border border-slate-200 rounded-full px-4 py-2 text-xs focus:outline-none focus:ring-1 focus:ring-indigo-500 bg-slate-50"
+                className="flex-grow border border-slate-200 dark:border-slate-700 rounded-full px-4 py-2 text-xs focus:outline-none focus:ring-1 focus:ring-indigo-500 bg-slate-50 dark:bg-slate-800 dark:text-white"
               />
               <button 
                 onClick={handleSend}
-                className="w-9 h-9 bg-indigo-600 text-white rounded-full flex items-center justify-center hover:bg-indigo-700 transition-colors shrink-0 shadow-md"
+                className="w-9 h-9 bg-indigo-600 dark:bg-indigo-700 text-white rounded-full flex items-center justify-center hover:bg-indigo-700 dark:hover:bg-indigo-800 transition-colors shrink-0 shadow-md"
               >
                 <i className="fas fa-paper-plane text-xs"></i>
               </button>
