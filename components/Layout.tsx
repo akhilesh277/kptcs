@@ -80,7 +80,7 @@ const Layout: React.FC<LayoutProps> = ({ children, activeTab, setActiveTab }) =>
             <address className="text-sm not-italic text-slate-400 space-y-2">
               <p>KPT Mangalore College</p>
               <p>KPT Junction, Mangalore, Karnataka 575004</p>
-              <p className="font-medium text-indigo-400">kptmangalore@gmail.com</p>
+              <p className="font-medium text-indigo-400">kptmng@gmail.com</p>
               <div className="pt-2 text-xs">
                 <p>Mon - Sat: 9:00 AM - 5:00 PM</p>
                 <p>Sunday: Holiday</p>

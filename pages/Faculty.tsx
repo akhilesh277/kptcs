@@ -46,7 +46,7 @@ const Faculty: React.FC = () => {
     <div className="animate-fadeIn py-12 bg-white">
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
         <div className="mb-10 border-b border-slate-100 pb-6">
-          <h1 className="text-3xl font-black text-slate-900 tracking-tight">Faculty Directory</h1>
+          <h1 className="text-3xl font-black text-slate-900 tracking-tight">CS Faculty</h1>
           <p className="text-sm text-slate-500 mt-2">Dedicated teaching professionals at KPT Mangalore Computer Science Department.</p>
         </div>
 
