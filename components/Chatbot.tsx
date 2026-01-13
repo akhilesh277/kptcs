@@ -1,11 +1,60 @@
-
 import React, { useState, useRef, useEffect } from 'react';
-import { getDepartmentResponse } from '../services/geminiService';
+
+const KNOWLEDGE_BASE = [
+  {
+    keywords: ["hello", "hi", "hey", "greetings", "anyone there"],
+    response: "Hello! I am your KPT CS College Assistant. How can I help you today?"
+  },
+  {
+    keywords: ["hod", "parashuram", "talwar", "head of department", "head", "department lead"],
+    response: "The Department of Computer Science & Engineering is led by Prof. Parashuram Talwar (HOD). He focuses on quality technical education and skill development."
+  },
+  {
+    keywords: ["faculty", "teachers", "staff", "lecturers", "timings", "faculty timings"],
+    response: "Our faculty includes Prof. Parashuram Talwar (HOD), Mrs. Leelavathi (Full Stack), Mr. Satish (Cyber Security), and guest lecturers Mrs. Akshitha, Mrs. Akshatha, Mrs. Likhitha, and Mrs. Sheetal. Faculty are available during college hours: 9 AM to 5 PM."
+  },
+  {
+    keywords: ["vision", "mission", "goal", "objective", "ethos"],
+    response: "Vision: To achieve leadership in CS & Engineering by strengthening fundamentals. Mission: Evolve as a center of excellence, collaborate with industry, and develop ethical professionals."
+  },
+  {
+    keywords: ["timing", "hours", "working hours", "open", "time", "schedule", "working"],
+    response: "The college operates from 9:00 AM to 5:00 PM, Monday to Saturday. Sunday is a holiday."
+  },
+  {
+    keywords: ["location", "address", "where", "junction", "place", "college location"],
+    response: "KPT Mangalore College is located at KPT Junction, Mangalore, Karnataka, 575004."
+  },
+  {
+    keywords: ["email", "contact", "gmail", "reach", "contact details"],
+    response: "You can reach the college office at kptmangalore@gmail.com. We handle all inquiries via Gmail."
+  },
+  {
+    keywords: ["courses", "syllabus", "subjects", "learn", "study", "areas"],
+    response: "Our courses cover Programming, Data Structures, DBMS, Software Engineering, Networking, Cyber Security, and Emerging Technologies like AI/ML and Cloud."
+  },
+  {
+    keywords: ["holiday", "sunday", "off"],
+    response: "Sunday is a holiday. We are open from Monday to Saturday, 9:00 AM to 5:00 PM."
+  },
+  {
+    keywords: ["admissions", "join", "apply"],
+    response: "For admission-related inquiries, please visit the college office at KPT Junction during working hours (9 AM - 5 PM) or email kptmangalore@gmail.com."
+  }
+];
+
+const SUGGESTIONS = [
+  "Faculty Timings",
+  "College Location",
+  "Working Hours",
+  "Courses",
+  "Contact Details"
+];
 
 const Chatbot: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<{ role: 'user' | 'bot', text: string }[]>([
-    { role: 'bot', text: 'Hello! I am your KPT CS Assistant. How can I help you today?' }
+    { role: 'bot', text: 'Welcome to KPT CS Assistant. I am here to help with information about our college, faculty, and courses!' }
   ]);
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
@@ -17,42 +66,68 @@ const Chatbot: React.FC = () => {
     }
   }, [messages, isTyping]);
 
-  const handleSend = async () => {
-    if (!input.trim()) return;
+  const processResponse = (userText: string) => {
+    const lowQuery = userText.toLowerCase();
+    let matchedResponse = "I'm sorry, I don't have that specific information. You can ask about faculty, timings, location, courses, or contact details.";
     
-    const userText = input;
+    for (const entry of KNOWLEDGE_BASE) {
+      if (entry.keywords.some(keyword => lowQuery.includes(keyword))) {
+        matchedResponse = entry.response;
+        break;
+      }
+    }
+
+    setIsTyping(true);
+    setTimeout(() => {
+      setMessages(prev => [...prev, { role: 'bot', text: matchedResponse }]);
+      setIsTyping(false);
+    }, 500);
+  };
+
+  const handleSend = () => {
+    const userText = input.trim();
+    if (!userText) return;
+
     setMessages(prev => [...prev, { role: 'user', text: userText }]);
     setInput('');
-    setIsTyping(true);
+    processResponse(userText);
+  };
 
-    const botText = await getDepartmentResponse(userText);
-    setMessages(prev => [...prev, { role: 'bot', text: botText }]);
-    setIsTyping(false);
+  const handleSuggestionClick = (suggestion: string) => {
+    setInput(suggestion);
+    // Auto-send suggestion if preferred, but user requested "automatically appear in input box"
+    // I will let it appear in input box as requested, but also trigger send for better UX if needed.
+    // Following strict instruction: "text must automatically appear in the chatbot input box. The chatbot should then respond"
+    setMessages(prev => [...prev, { role: 'user', text: suggestion }]);
+    setInput('');
+    processResponse(suggestion);
   };
 
   return (
     <div className="fixed bottom-6 right-6 z-[100]">
       {isOpen ? (
-        <div className="bg-white rounded-2xl shadow-2xl w-[350px] sm:w-[400px] flex flex-col border border-slate-200 overflow-hidden h-[500px]">
+        <div className="bg-white rounded-2xl shadow-2xl w-[320px] sm:w-[380px] flex flex-col border border-slate-200 overflow-hidden h-[500px] animate-fadeIn">
+          {/* Header */}
           <div className="bg-indigo-600 p-4 flex justify-between items-center text-white">
             <div className="flex items-center gap-2">
               <div className="w-8 h-8 bg-white/20 rounded-full flex items-center justify-center">
-                <i className="fas fa-robot"></i>
+                <i className="fas fa-university text-sm"></i>
               </div>
-              <span className="font-semibold">KPT CS Assistant</span>
+              <span className="font-semibold text-sm">KPT CS Assistant</span>
             </div>
-            <button onClick={() => setIsOpen(false)} className="hover:text-indigo-200">
+            <button onClick={() => setIsOpen(false)} className="hover:text-indigo-200 transition-colors">
               <i className="fas fa-times"></i>
             </button>
           </div>
 
-          <div ref={scrollRef} className="flex-grow overflow-y-auto p-4 space-y-4 bg-slate-50">
+          {/* Messages */}
+          <div ref={scrollRef} className="flex-grow overflow-y-auto p-4 space-y-4 bg-slate-50 scroll-stable">
             {messages.map((m, idx) => (
               <div key={idx} className={`flex ${m.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-                <div className={`max-w-[80%] px-4 py-2 rounded-2xl text-sm ${
+                <div className={`max-w-[85%] px-4 py-2.5 rounded-2xl text-[13px] leading-relaxed ${
                   m.role === 'user' 
-                    ? 'bg-indigo-600 text-white rounded-tr-none' 
-                    : 'bg-white border border-slate-200 text-slate-800 rounded-tl-none'
+                    ? 'bg-indigo-600 text-white rounded-tr-none shadow-sm' 
+                    : 'bg-white border border-slate-200 text-slate-800 rounded-tl-none shadow-sm'
                 }`}>
                   {m.text}
                 </div>
@@ -60,41 +135,54 @@ const Chatbot: React.FC = () => {
             ))}
             {isTyping && (
               <div className="flex justify-start">
-                <div className="bg-white border border-slate-200 px-4 py-2 rounded-2xl rounded-tl-none">
+                <div className="bg-white border border-slate-200 px-4 py-2 rounded-2xl rounded-tl-none shadow-sm">
                   <div className="flex gap-1">
-                    <div className="w-1.5 h-1.5 bg-slate-300 rounded-full animate-bounce"></div>
-                    <div className="w-1.5 h-1.5 bg-slate-300 rounded-full animate-bounce delay-75"></div>
-                    <div className="w-1.5 h-1.5 bg-slate-300 rounded-full animate-bounce delay-150"></div>
+                    <div className="w-1 h-1 bg-slate-300 rounded-full animate-bounce"></div>
+                    <div className="w-1 h-1 bg-slate-300 rounded-full animate-bounce delay-75"></div>
+                    <div className="w-1 h-1 bg-slate-300 rounded-full animate-bounce delay-150"></div>
                   </div>
                 </div>
               </div>
             )}
           </div>
 
-          <div className="p-4 bg-white border-t border-slate-200 flex gap-2">
-            <input
-              type="text"
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyDown={(e) => e.key === 'Enter' && handleSend()}
-              placeholder="Type your question..."
-              className="flex-grow border border-slate-200 rounded-full px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            />
-            <button 
-              onClick={handleSend}
-              disabled={isTyping}
-              className="w-10 h-10 bg-indigo-600 text-white rounded-full flex items-center justify-center hover:bg-indigo-700 disabled:bg-slate-300"
-            >
-              <i className="fas fa-paper-plane"></i>
-            </button>
+          {/* Suggestions & Input */}
+          <div className="bg-white border-t border-slate-100 p-3">
+            <div className="flex flex-wrap gap-1.5 mb-3">
+              {SUGGESTIONS.map(s => (
+                <button
+                  key={s}
+                  onClick={() => handleSuggestionClick(s)}
+                  className="text-[10px] font-semibold bg-indigo-50 text-indigo-700 px-2.5 py-1 rounded-full border border-indigo-100 hover:bg-indigo-100 transition-colors"
+                >
+                  {s}
+                </button>
+              ))}
+            </div>
+            <div className="flex gap-2">
+              <input
+                type="text"
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && handleSend()}
+                placeholder="Ask a question..."
+                className="flex-grow border border-slate-200 rounded-full px-4 py-2 text-xs focus:outline-none focus:ring-1 focus:ring-indigo-500 bg-slate-50"
+              />
+              <button 
+                onClick={handleSend}
+                className="w-9 h-9 bg-indigo-600 text-white rounded-full flex items-center justify-center hover:bg-indigo-700 transition-colors shrink-0 shadow-md"
+              >
+                <i className="fas fa-paper-plane text-xs"></i>
+              </button>
+            </div>
           </div>
         </div>
       ) : (
         <button 
           onClick={() => setIsOpen(true)}
-          className="bg-indigo-600 hover:bg-indigo-700 text-white w-14 h-14 rounded-full shadow-lg flex items-center justify-center transition-transform hover:scale-110"
+          className="bg-indigo-600 hover:bg-indigo-700 text-white w-14 h-14 rounded-full shadow-xl flex items-center justify-center transition-all hover:scale-105 active:scale-95 group"
         >
-          <i className="fas fa-comments text-2xl"></i>
+          <i className="fas fa-comment-dots text-xl group-hover:animate-pulse"></i>
         </button>
       )}
     </div>
