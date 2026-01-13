@@ -104,7 +104,7 @@ const Layout: React.FC<LayoutProps> = ({ children, activeTab, setActiveTab }) =>
                   title="Toggle Book Cursor"
                 >
                   <i className="fas fa-book-open"></i>
-                  <span className="hidden lg:inline">Cursor</span>
+                  <span className="hidden lg:inline"></span>
                 </button>
 
                 {/* Theme Toggle */}
